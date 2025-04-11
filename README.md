@@ -13,7 +13,7 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 - View All Wallets (admin only)
 - Delete Wallet (admin only)
 - Track Transactions (Payment / Credit)
-- Error handling with JSON responses (e.g., Insufficient Balance, Wallet Not Found)
+- Error handling with JSON responses (e.g., Insufficient Balance, Wallet Not Found, User already registered)
 
 ---
 
@@ -88,11 +88,11 @@ Access the H2 Console at:
 ```
 http://localhost:8080/h2-console
 ```
-- JDBC URL: jdbc:h2:mem:testdb
+- JDBC URL: jdbc:h2:mem:walletdb
 - User Name: sa
 - Password: (leave blank)
 
-Click Connect to explore tables - WALLET and TRANSACTIONS.
+Click Connect to explore tables - WALLET,USERS,TRANSACTIONS.
 
 ## API Endpoints(Use with Postman)
 Base URL: http://localhost:8080/api/

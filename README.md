@@ -51,7 +51,7 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 
 ```bash
 git clone <repository_url>
-cd digital-wallet-springboot
+cd <project_folder>
 ```
 
 ### 2. Build and run
@@ -69,9 +69,9 @@ Access the H2 Console at:
 ```
 http://localhost:8080/h2-console
 ```
--JDBC URL: jdbc:h2:mem:testdb
--User Name: sa
--Password: (leave blank)
+- JDBC URL: jdbc:h2:mem:testdb
+- User Name: sa
+- Password: (leave blank)
 
 Click Connect to explore tables - WALLET and TRANSACTIONS.
 

@@ -1,6 +1,7 @@
 package com.example.WalletApplication.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.example.WalletApplication.Entity.ErrorResponse;
 import com.example.WalletApplication.Entity.Wallet;
@@ -32,32 +33,38 @@ public class WalletController {
     }
 
     @PostMapping("/createWallet")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Wallet> createWallet(@RequestParam String username) {
         Wallet savedWallet=walletService.createWallet(username);
         return ResponseEntity.ok(savedWallet);
     }
 
     @GetMapping("/allWallets")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Wallet> getAllWallets() {
         return walletService.getAllWallets();
     }
 
     @GetMapping("/getWalletById/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Wallet getWallet(@PathVariable("id") Long id) {
         return walletService.getWalletById(id);
     }
     
     @PostMapping("/{id}/add")
+    @PreAuthorize("hasRole('USER')")
     public Wallet addFunds(@PathVariable Long id, @RequestParam double amount) {
         return walletService.addFunds(id, amount);
     }
 
     @PostMapping("/{id}/pay")
+    @PreAuthorize("hasRole('USER')")
     public Wallet makePayment(@PathVariable Long id, @RequestParam double amount) {
         return walletService.makePayment(id, amount);
     }
 
     @PostMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, String>> deleteWallet(@PathVariable Long id) {
         walletService.deleteWallet(id);
         Map<String, String> response = new HashMap<>();

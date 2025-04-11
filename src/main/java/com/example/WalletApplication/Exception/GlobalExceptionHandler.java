@@ -25,4 +25,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse("Insufficient Balance to make this transaction!", HttpStatus.CONFLICT.value());
+
+        return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+    }
+
 }

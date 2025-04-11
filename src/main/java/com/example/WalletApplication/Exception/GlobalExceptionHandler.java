@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        ErrorResponse error = new ErrorResponse("Insufficient Balance to make this transaction!", HttpStatus.CONFLICT.value());
+        ErrorResponse error = new ErrorResponse("User already registered!", HttpStatus.CONFLICT.value());
 
         return new ResponseEntity<>(error,HttpStatus.CONFLICT);
     }

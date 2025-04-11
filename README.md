@@ -9,9 +9,9 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 - Create Wallets by Username
 - Add Funds
 - Make Payments
-- View Wallet by ID
-- View All Wallets
-- Delete Wallet
+- View Wallet by ID (admin only)
+- View All Wallets (admin only)
+- Delete Wallet (admin only)
 - Track Transactions (Payment / Credit)
 - Error handling with JSON responses (e.g., Insufficient Balance, Wallet Not Found)
 
@@ -25,8 +25,13 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 - RESTful APIs
 - Postman (API testing)
 - Lombok
-
+- Spring Security
+- Jwt 
 ---
+
+### Authentication & Authorization
+
+This application utilizes JWT (JSON Web Tokens) for stateless authentication and enforces role-based access control.
 
 ##  Entity Overview
 
@@ -43,8 +48,22 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 - `timestamp` (LocalDateTime)
 - `wallet` (Wallet reference)
 
+### `User`
+- `id` (Long): Primary Key
+- `username` (String)
+- `password` (double)
+- `isAdmin` (boolean)
+
 ---
 
+### Admin Credentials
+
+- **Username**: `admin`
+- **Password**: `adminpassword`
+
+Use these credentials to log in and obtain a JWT token for accessing admin protected endpoints.
+
+---
 ## Project Setup
 
 ###  1. Clone the Repo
@@ -76,31 +95,67 @@ http://localhost:8080/h2-console
 Click Connect to explore tables - WALLET and TRANSACTIONS.
 
 ## API Endpoints(Use with Postman)
-Base URL: http://localhost:8080/api/wallets
+Base URL: http://localhost:8080/api/
 
+### Public Endpoints
+
+- **POST** `http://localhost:8080/api/auth/signup`  
+  Register a new user.
+
+- **POST** `http://localhost:8080/api/auth/login`  
+  Authenticate a user and receive a JWT token.
+
+  Response:
+  ```
+  {
+    "token":"<your_jwt_token>"
+  }
+  ```
+
+### Protected Endpoints
+
+User Authentication Required:
 ### Create Wallet 
 ```
-POST /createWallet?username=JohnDoe
+POST http://localhost:8080/api/wallets/createWallet?username=testuser
 ```
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <your_jwt_token>
+
 ### Get All Wallets
 ```
-GET /allWallets
+GET http://localhost:8080/api/wallets/allWallets
 ```
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <admin_jwt_token>
+
 ### Get Wallet by ID 
 ```
-GET /getWalletById/{id}
-
+GET http://localhost:8080/api/wallets/getWalletById/{id}
 ```
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <admin_jwt_token>
+
 ### Add Funds
 ```
-POST /{id}/add?amount=500.0
+POST http://localhost:8080/api/wallets/{id}/add?amount=500.0
 ```
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <your_jwt_token>
 
 ### Make Payment
 ```
-POST /{id}/pay?amount=100.0
+POST http://localhost:8080/api/wallets/{id}/pay?amount=100.0
 
 ```
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <your_jwt_token>
+
 If insufficient balance:
 ```
 {
@@ -111,10 +166,13 @@ If insufficient balance:
 
 ### Delete Wallet
 ```
-POST /{id}/delete
+POST http://localhost:8080/api/wallets/{id}/delete
 ```
-
+Headers:
+- `Content-type`:`application/json`
+- `Authorization`:`Bearer <admin_jwt_token>
 ---
+
 ## Testing with Postman
 1. Open Postman.
 2. Use the provided endpoints with `http://localhost:8080/api/wallets` as base URL.
@@ -141,3 +199,10 @@ POST /{id}/delete
   "status": 400
 }
 ```
+
+-UserAlreadyExistsException → 409 Conflict
+```
+{
+  "message": "User already registered!",
+  "status": 409
+}

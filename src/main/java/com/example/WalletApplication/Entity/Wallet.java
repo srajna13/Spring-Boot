@@ -45,7 +45,7 @@ public class Wallet {
 
     public void makePayment(double amount) throws RuntimeException{
         if(amount>balance){
-            throw new InsufficientBalanceException("Insufficient Balance to perform this transaction!");
+            throw new InsufficientBalanceException("Insufficient balance to perform this transaction!");
         }
 
         this.balance-=amount;

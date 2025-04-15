@@ -26,7 +26,10 @@ A simple Spring Boot project simulating a Digital Wallet system. It supports wal
 - Postman (API testing)
 - Lombok
 - Spring Security
-- Jwt 
+- Jwt
+- JUnit
+- Mockito
+  
 ---
 
 ### Authentication & Authorization
@@ -92,18 +95,40 @@ http://localhost:8080/h2-console
 - User Name: sa
 - Password: (leave blank)
 
-Click Connect to explore tables - WALLET,USERS,TRANSACTIONS.
+Click Connect to explore tables - Wallet, Users, Transactions.
 
-## API Endpoints(Use with Postman)
+## API Endpoints ( Use with Postman )
 Base URL: http://localhost:8080/api/
 
 ### Public Endpoints
 
-- **POST** `http://localhost:8080/api/auth/signup`  
-  Register a new user.
+- **POST** `http://localhost:8080/api/auth/signup`
+
+Request Body:
+  ```
+  {
+    "username": "testuser",
+    "password": "testpassword"
+  }
+  ```
+  
+  Response:
+  ```
+  {
+    User registered successfully.
+  }
+  ```
 
 - **POST** `http://localhost:8080/api/auth/login`  
   Authenticate a user and receive a JWT token.
+
+  Request Body:
+  ```
+  {
+    "username": "testuser",
+    "password": "testpassword"
+  }
+  ```
 
   Response:
   ```
@@ -121,7 +146,17 @@ POST http://localhost:8080/api/wallets/createWallet?username=testuser
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <your_jwt_token>
+- `Authorization`:`Bearer <your_jwt_token>`
+
+Response:
+  ```
+  {
+    "id": <id>,
+    "username": "testuser",
+    "balance": 0.0,
+    "transactions": <your_transactions_list>
+  }
+  ```
 
 ### Get All Wallets
 ```
@@ -129,7 +164,8 @@ GET http://localhost:8080/api/wallets/allWallets
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <admin_jwt_token>
+- `Authorization`:`Bearer <admin_jwt_token>`
+
 
 ### Get Wallet by ID 
 ```
@@ -137,7 +173,7 @@ GET http://localhost:8080/api/wallets/getWalletById/{id}
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <admin_jwt_token>
+- `Authorization`:`Bearer <admin_jwt_token>`
 
 ### Add Funds
 ```
@@ -145,7 +181,7 @@ POST http://localhost:8080/api/wallets/{id}/add?amount=500.0
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <your_jwt_token>
+- `Authorization`:`Bearer <your_jwt_token>`
 
 ### Make Payment
 ```
@@ -154,7 +190,7 @@ POST http://localhost:8080/api/wallets/{id}/pay?amount=100.0
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <your_jwt_token>
+- `Authorization`:`Bearer <your_jwt_token>`
 
 If insufficient balance:
 ```
@@ -170,10 +206,10 @@ POST http://localhost:8080/api/wallets/{id}/delete
 ```
 Headers:
 - `Content-type`:`application/json`
-- `Authorization`:`Bearer <admin_jwt_token>
+- `Authorization`:`Bearer <admin_jwt_token>`
 ---
 
-## Testing with Postman
+## Testing endpoints with Postman
 1. Open Postman.
 2. Use the provided endpoints with `http://localhost:8080/api/wallets` as base URL.
 3. Set HTTP method (POST or GET).
@@ -206,3 +242,15 @@ Headers:
   "message": "User already registered!",
   "status": 409
 }
+```
+---
+
+## Running Tests
+to run unit tests:
+```
+mvn test
+```
+This will:
+- Compile test classes from src/test/java
+- Execute all JUnit 5 / Mockito-based test cases
+- Print results in the console
